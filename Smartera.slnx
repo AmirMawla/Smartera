@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/Smartera/">
-    <Project Path="Smartera/Smartera.PL.csproj" />
-  </Folder>
-  <Project Path="Smartera.BLL/Smartera.BLL.csproj" />
-  <Project Path="Smartera.DAL/Smartera.DAL.csproj" />
-  <Project Path="Smartera.Tests/Smartera.Tests.csproj" />
-</Solution>

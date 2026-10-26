@@ -81,8 +81,6 @@ namespace Smartera.PL.Controllers
             [FromQuery(Name = "order")] string? orderId,
             CancellationToken cancellationToken)
         {
-            // Note: Per security requirements, never mark order as paid purely based on frontend redirect!
-            // Order fulfillment and verification is handled strictly via HMAC-verified webhook.
             var isSuccess = bool.TryParse(successStr, out var s) && s;
 
             return Ok(new
