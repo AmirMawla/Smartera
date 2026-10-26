@@ -1,0 +1,6 @@
+@Smartera_HostAddress = http://localhost:5002
+
+GET {{Smartera_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
