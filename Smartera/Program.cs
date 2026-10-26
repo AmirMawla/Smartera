@@ -1,33 +1,60 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Smartera.DAL.Data;
+using Smartera.DAL.Entities;
+using Smartera.PL;
 
-namespace Smartera;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+// Add services to the container
+builder.Services.AddApplicationServices(builder.Configuration);
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline
+app.UseExceptionHandler();
+
+// Enable Swagger UI
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    public static void Main(string[] args)
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SMARTERA API V1");
+    c.RoutePrefix = string.Empty; // Serve Swagger UI at application root
+});
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+// Request Localization (en/ar)
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+app.UseRequestLocalization(locOptions);
+
+app.UseCors();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+// Initialize and seed database safely on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
     {
-        var builder = WebApplication.CreateBuilder(args);
+        var context = services.GetRequiredService<AppDbContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        // Add services to the container.
-
-        builder.Services.AddControllers();
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
-
-        var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-
-        app.MapControllers();
-
-        app.Run();
+        context.Database.EnsureCreated();
+        await SeedData.InitializeAsync(context, userManager, roleManager);
+        logger.LogInformation("SMARTERA database initialized and seeded successfully.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while seeding the database on startup.");
     }
 }
+
+app.Run();
