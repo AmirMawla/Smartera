@@ -35,6 +35,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/swagger", () => Results.Redirect("/"));
 
 // Initialize and seed database safely on startup
 using (var scope = app.Services.CreateScope())
