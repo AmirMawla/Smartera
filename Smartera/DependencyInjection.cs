@@ -140,6 +140,10 @@ namespace Smartera.PL
             services.Configure<PaymobOptions>(configuration.GetSection(PaymobOptions.SectionName));
             services.AddHttpClient<IPaymobService, PaymobService>();
 
+            // Email Service & MailSettings
+            services.Configure<Smartera.BLL.Services.Email.MailSettings>(configuration.GetSection("MailSettings"));
+            services.AddScoped<Smartera.BLL.Services.Email.IEmailService, Smartera.BLL.Services.Email.EmailService>();
+
             // Global Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddProblemDetails();

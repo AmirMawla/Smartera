@@ -86,4 +86,68 @@ namespace Smartera.BLL.Dtos.AuthenticationDto
         IEnumerable<string> Roles,
         DateTime RegistrationDate
     );
+
+    public record VerifyEmailRequest(string Email, string Otp);
+
+    public class VerifyEmailRequestValidator : AbstractValidator<VerifyEmailRequest>
+    {
+        public VerifyEmailRequestValidator()
+        {
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
+            RuleFor(x => x.Otp).NotEmpty().Length(6).WithMessage("OTP must be 6 digits.");
+        }
+    }
+
+    public record ResendOtpRequest(string Email);
+
+    public class ResendOtpRequestValidator : AbstractValidator<ResendOtpRequest>
+    {
+        public ResendOtpRequestValidator()
+        {
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        }
+    }
+
+    public record ForgotPasswordRequest(string Email);
+
+    public class ForgotPasswordRequestValidator : AbstractValidator<ForgotPasswordRequest>
+    {
+        public ForgotPasswordRequestValidator()
+        {
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        }
+    }
+
+    public record VerifyOtpRequest(string Email, string Otp);
+
+    public class VerifyOtpRequestValidator : AbstractValidator<VerifyOtpRequest>
+    {
+        public VerifyOtpRequestValidator()
+        {
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
+            RuleFor(x => x.Otp).NotEmpty().Length(6).WithMessage("OTP must be 6 digits.");
+        }
+    }
+
+    public record VerifyOtpResponse(string ResetToken);
+
+    public record ResetPasswordRequest(string Email, string ResetToken, string NewPassword);
+
+    public class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequest>
+    {
+        public ResetPasswordRequestValidator()
+        {
+            RuleFor(x => x.Email).NotEmpty().EmailAddress();
+            RuleFor(x => x.ResetToken).NotEmpty().WithMessage("Reset token is required.");
+            RuleFor(x => x.NewPassword)
+                .NotEmpty().WithMessage("New password is required.")
+                .MinimumLength(8).WithMessage("Password must be at least 8 characters long.")
+                .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter.")
+                .Matches(@"[0-9]").WithMessage("Password must contain at least one number.")
+                .Matches(@"[\!\?\*\@\#\$\%\^\&\+\=]").WithMessage("Password must contain at least one special character.");
+        }
+    }
+
+    public record MessageResponse(string Message);
 }

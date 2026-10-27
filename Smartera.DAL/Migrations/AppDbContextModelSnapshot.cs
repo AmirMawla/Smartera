@@ -383,6 +383,44 @@ namespace Smartera.DAL.Migrations
                     b.ToTable("OrderProducts");
                 });
 
+            modelBuilder.Entity("Smartera.DAL.Entities.OtpEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HashedOtp")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("Purpose")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Expiry");
+
+                    b.HasIndex("Email", "Purpose");
+
+                    b.ToTable("OtpEntries");
+                });
+
             modelBuilder.Entity("Smartera.DAL.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")

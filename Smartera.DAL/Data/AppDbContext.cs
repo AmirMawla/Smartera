@@ -26,5 +26,6 @@ namespace Smartera.DAL.Data
         public DbSet<OrderProduct> OrderProducts => Set<OrderProduct>();
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<OtpEntry> OtpEntries => Set<OtpEntry>();
     }
 }

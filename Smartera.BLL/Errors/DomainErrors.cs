@@ -15,13 +15,28 @@ namespace Smartera.BLL.Errors
             new("User.DuplicatedEmail", "A user with this email address already exists", StatusCodes.Status409Conflict);
 
         public static readonly Error EmailNotConfirmed =
-            new("User.EmailNotConfirmed", "Email has not been confirmed", StatusCodes.Status400BadRequest);
+            new("User.EmailNotConfirmed", "Email has not been confirmed. Please verify your email first.", StatusCodes.Status403Forbidden);
+
+        public static readonly Error EmailAlreadyConfirmed =
+            new("User.EmailAlreadyConfirmed", "This email address is already verified.", StatusCodes.Status400BadRequest);
 
         public static readonly Error InvalidRefreshToken =
             new("User.InvalidRefreshToken", "The refresh token is invalid or expired", StatusCodes.Status401Unauthorized);
 
         public static readonly Error UnauthorizedAccess =
             new("User.UnauthorizedAccess", "You are not authorized to perform this action", StatusCodes.Status403Forbidden);
+    }
+
+    public static class OtpErrors
+    {
+        public static readonly Error InvalidOtp =
+            new("Otp.InvalidOtp", "The verification code is invalid or has expired.", StatusCodes.Status400BadRequest);
+
+        public static readonly Error OtpExpired =
+            new("Otp.Expired", "The verification code has expired. Please request a new one.", StatusCodes.Status400BadRequest);
+
+        public static readonly Error InvalidResetToken =
+            new("Otp.InvalidResetToken", "Password reset token is invalid or has expired.", StatusCodes.Status400BadRequest);
     }
 
     public static class CategoryErrors
